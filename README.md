@@ -8,8 +8,11 @@ Time spent: **5** hours spent in total
 
 The following **required** functionality is complete:
 
-- [x] Conceptual Look at OAuth
-- [x] Basic Twitter OAuth
+- [x] Sign in using OAuth
+- [x] User can view last 20 tweets
+- [x] The current signed in user will be persisted across restarts
+- [x] The home timeline, user can view tweet with the user profile picture, username, tweet text, and timestamp. In other words, design        the custom cell with the proper Auto Layout settings.
+- [x] Retweeting and favoriting should increment the retweet and favorite counr
 
 The following **additional** features are implemented:
 
