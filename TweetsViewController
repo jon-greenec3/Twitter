@@ -1,22 +1,31 @@
 //
 //  TweetsViewController.swift
-//  Twitter
+//  TwitterDemo
 //
-//  Created by Windell Greene on 2/15/16.
+//  Created by Windell Greene on 2/20/16.
 //  Copyright © 2016 codepath. All rights reserved.
 //
 
 import UIKit
 
 class TweetsViewController: UIViewController {
+    
+    var tweets: [Tweet]!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-        TwitterClient.sharedInstance.homeTimelineWithParams(nil, completion: { (tweets, error) -> () in
+        
+        TwitterClient.sharedInstance.homeTimeline({ (tweets: [Tweet]) -> () in
             self.tweets = tweets
             
+            for tweet in tweets {
+                print(tweet.text)
+            }
+            }, failure: { (error: NSError) -> () in
+                print(error.localizedDescription)
+        })
+
+        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
@@ -25,9 +34,6 @@ class TweetsViewController: UIViewController {
     }
     
 
-    @IBAction func onLogout(sender: AnyObject) {
-        User.currentUser?.logout()
-    }
     /*
     // MARK: - Navigation
 
