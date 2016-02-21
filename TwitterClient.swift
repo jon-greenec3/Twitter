@@ -35,6 +35,8 @@ class TwitterClient: BDBOAuth1SessionManager {
         
         fetchAccessTokenWithPath("oauth/access_token", method: "POST", requestToken: requestToken, success: { (accessToken: BDBOAuth1Credential!) -> Void in
             
+            
+            
             self.loginSuccess?()
         
         }) { (error: NSError!) -> Void in
@@ -56,7 +58,7 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
-    func currentAccount() {
+    func currentAccount(success: (User) -> (), failure: (NSError) -> ()) {
         GET("1.1/account/verify_credentials.json", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
             print("account: \(response)")
             let userDictionary = response as! NSDictionary
@@ -64,14 +66,12 @@ class TwitterClient: BDBOAuth1SessionManager {
             
             let user = User(dictionary: userDictionary)
             
+            success(user)
             
             
-            print("name: \(user.name)")
-            print("screenname: \(user.screenname)")
-            print("profule url: \(user.profileUrl)")
-            print("description: \(user.tagline)")
             
-            }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
+        }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
+            failure(error)
                 
         })
 
