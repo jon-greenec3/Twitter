@@ -30,8 +30,9 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 ## Notes
 
 Describe any challenges encountered while building the app.
-1. I had a hard time getting the app to function with the year old video. I only found out about the google docs that fixed the video untill it was too late.
-2. I had a hard time with the errors that would pop up on my screen periodically for lots of things I entered in like the walkthrough showed me. I eventually fixed most of them
+1. I had a hard time getting the app to sign me in and load the my feed. Because I did not have a twitter before this assignment, the app did not load any tweets and had very little for my profile.
+2. Also my LiceCap was not working properly for some reason.
+
 
 ## License
 
