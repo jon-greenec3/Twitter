@@ -1,37 +1,48 @@
 //
 //  Tweet.swift
-//  Twitter
+//  TwitterDemo
 //
-//  Created by Windell Greene on 2/15/16.
+//  Created by Windell Greene on 2/20/16.
 //  Copyright © 2016 codepath. All rights reserved.
 //
 
 import UIKit
 
 class Tweet: NSObject {
-    var user: User?
-    var text: String?
-    var createdAtString: String?
-    var createdAt: NSDate?
+    
+    var text: NSString?
+    var timestamp: NSDate?
+    var retweetCount: Int = 0
+    var favoritesCount: Int = 0
     
     init(dictionary: NSDictionary) {
-        user = User(dictionary: dictionary["user"] as NSDictionary)
-        text = dictionary[:text"] as? String
-        createdAtString = dictionary["created_at"] as? String
+        text = dictionary["text"] as? String
         
-        var formatter = NSDateFormatter()
-        formatter.dateFormat = "EEE MMM d HH:mm:ss Z y"
-        createdAt = formatter.dateFromString(createdAtString!)
+        retweetCount = (dictionary["retweet_count"] as? Int) ?? 0
+        favoritesCount = (dictionary["favourites_count"] as? Int) ?? 0
+        
+        let timestampString = dictionary["created_at"] as? String
+        
+        if let timestampString = timestampString {
+            let formatter = NSDateFormatter()
+            formatter.dateFormat = "EEE MMM d HH:mm:ss Z y"
+            timestamp = formatter.dateFromString(timestampString)
+        }
+        
     }
     
-    class func tweetWithArray(array: [NSDictionary]) -> [Tweet] {
+    class func tweetsWithArray(dictionaries: [NSDictionary]) -> [Tweet] {
         var tweets = [Tweet]()
         
-        for dictionary in array {
-            tweets.append(Tweet(dictionary: dictionary))
+        for dictionary in dictionaries {
+            let tweet = Tweet(dictionary: dictionary)
+            
+            tweets.append(tweet)
         }
         
         return tweets
+    
+    
     }
 
 }
