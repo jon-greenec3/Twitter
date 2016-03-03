@@ -1,33 +1,54 @@
 //
 //  TweetsViewController.swift
-//  TwitterDemo
+//  Twitter2
 //
-//  Created by Windell Greene on 2/20/16.
-//  Copyright © 2016 codepath. All rights reserved.
+//  Created by Jacob Hughes on 2/21/16.
+//  Copyright © 2016 Jacob Hughes. All rights reserved.
 //
 
 import UIKit
 
-class TweetsViewController: UIViewController {
-    
+class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     var tweets: [Tweet]!
-
+    
+    @IBOutlet weak var tweetCellLabel: CustomTableViewCell!
+    @IBOutlet var tableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        TwitterClient.sharedInstance.homeTimeline({ (tweets: [Tweet]) -> () in
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "bg3.jpg")!)
+        self.navigationController!.navigationBar.barTintColor = UIColor.blackColor()
+       //tweetCellLabel.backgroundColor = UIColor.clearColor()
+        
+        
+        self.tableView.dataSource = self
+        self.tableView.delegate = self
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 120
+        
+        TwitterClient.sharedInstance.homeTimeLine({ (tweets: [Tweet]) -> () in
             self.tweets = tweets
+            self.tableView.reloadData()
             
-            for tweet in tweets {
-                print(tweet.text)
-            }
             }, failure: { (error: NSError) -> () in
                 print(error.localizedDescription)
         })
-
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         // Do any additional setup after loading the view.
     }
-
+    
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -35,17 +56,85 @@ class TweetsViewController: UIViewController {
     
     @IBAction func onLogoutButton(sender: AnyObject) {
         TwitterClient.sharedInstance.logout()
-        
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "TweetDetailView" {
+            let cell = sender as! CustomTableViewCell
+            let tweet = cell.tweet
+            
+            let destinationViewController = segue.destinationViewController as! TweetDetailViewController
+            destinationViewController.tweet = tweet
+        }
+        if segue.identifier == "UserView" {
+            let button = sender as! UIButton
+            let cell = button.superview?.superview as! CustomTableViewCell
+            let tweet = cell.tweet
+            
+            let destinationViewController = segue.destinationViewController as! UserViewController2
+            destinationViewController.tweet = tweet
+        }
     }
-    */
-
+    
+    
+    
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("tweetCell", forIndexPath: indexPath) as! CustomTableViewCell
+        let tweet = tweets[indexPath.row]
+        
+        cell.tweet = tweet
+        
+        //tweet labels
+        cell.tweetText.text = String(tweet.text!)
+        cell.tweetText.sizeToFit()
+        cell.tweetText.numberOfLines = 0
+        cell.labelDate.text = String(tweet.timeStamp!)
+        cell.labelFavoriteNumber.text = String(tweet.favoritesCount)
+        cell.labelRetweetNumber.text = String(tweet.retweetCount)
+        
+        //user labels
+        cell.labelUserName.text = tweet.userName
+        cell.labelUserHandle.text = "@\(tweet.userHandle!)"
+        
+        //user profile picture
+        cell.imageProfilePicture.setImageWithURL(tweet.imageProfileURL!)
+        cell.imageProfilePicture.layer.cornerRadius = 28
+        cell.imageProfilePicture.clipsToBounds = true
+        
+        ///cell.backgroundColor = UIColor.clearColor()
+        
+        cell.labelUserName.backgroundColor = UIColor.whiteColor()
+        cell.labelUserName.layer.cornerRadius = 10.0
+        cell.labelUserName.clipsToBounds = true
+        
+       
+        cell.labelUserName.center.x = self.view.frame.width + 200
+        cell.tweetText.center.x = self.view.frame.width + 200
+        cell.labelUserHandle.center.x = self.view.frame.width + 200
+        
+        UIView.animateWithDuration(1.0, delay: 0.3, usingSpringWithDamping: 1.0, initialSpringVelocity: 1.0, options: [], animations: ({
+            
+            cell.labelUserName.center.x = self.view.frame.width / 2
+            cell.labelUserHandle.center.x = self.view.frame.width / 2
+            
+        }), completion: nil)
+        
+        UIView.animateWithDuration(1.0, delay: 0.5, usingSpringWithDamping: 1.0, initialSpringVelocity: 1.0, options: [], animations: ({
+            
+            cell.tweetText.center.x = self.view.frame.width / 2
+            
+        }), completion: nil)
+        
+        return cell
+    }
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let tweets = tweets{
+            return tweets.count
+        }
+        else{
+            return 0
+        }
+    }
 }
