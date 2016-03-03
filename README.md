@@ -2,7 +2,7 @@
 
 **Twitter** is a twitter based app using the [The Twitter Database API](https://apps.twitter.com/app/9535802/keys).
 
-Time spent: **5** hours spent in total
+Time spent: **15** hours spent in total
 
 ## User Stories
 
